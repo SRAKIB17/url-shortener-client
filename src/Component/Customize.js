@@ -9,11 +9,14 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import CustomizeUrl from './CustomizeUrl';
 import Header from './Header';
+import QRCode from "react-qr-code";
+
 
 const Customize = () => {
 
     const navigate = useNavigate()
-    const { getEditAbleId } = useParams()
+    const { getEditAbleId } = useParams();
+    const [download, setDownload] = useState(true)
     const [state, setState] = useState({ copied: false });
     const [edit, setEdit] = useState(null)
     const { data, isLoading, refetch } = useQuery(getEditAbleId, () => axios.get(`https://url-shortener-mini.herokuapp.com/url-custom/${getEditAbleId}`))
@@ -28,10 +31,47 @@ const Customize = () => {
     const secretCode = editableId?.split('-')[1]
     const shortener = editableId?.split('-')[0]
 
+    const [urlw, setUrl] = useState("")
+    const downloadQr = async (e) => {
+        setDownload(true)
+        const svg = e.target.ownerDocument.querySelector('#svg');
+        var svgData = new XMLSerializer().serializeToString(svg);
+        const canvas = e.target.ownerDocument.querySelector('#myCanvas');
 
+        const svgSize = svg.getBoundingClientRect();
+        //Resize can break shadows
+
+        canvas.width = svgSize.width;
+        canvas.height = svgSize.height;
+        canvas.style.width = svgSize.width;
+        canvas.style.height = svgSize.height;
+        var ctx = canvas.getContext("2d");
+
+        const img = e.target.ownerDocument.createElement('img')
+
+        await img.setAttribute('src', 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData))));
+
+        await ctx.drawImage(img, 1, 1);
+
+        const file = canvas.toDataURL('image/jpeg', 1.0);
+
+        const a = e.target.ownerDocument.createElement('a');
+
+        a.className = "display-none";
+        a.download = `${shortener}.jpeg`;
+        a.href = file;
+        e.target.appendChild(a);
+
+        if (download) {
+            a.click();
+            setDownload(false)
+        }
+    }
+    const domainUrl = 'http://urlsh.wap.sh/'
     return (
         <div>
             <Header />
+
             <div className="hero min-h-screen bg-base-200">
                 <div className="hero-content flex-col lg:flex-row-reverse h-full">
                     {/* for url details  */}
@@ -98,9 +138,9 @@ const Customize = () => {
                                         <td>
                                             <p className='overflow-x-auto input input-bordered input-secondary w-[210px] flex items-center justify-between' id=' '>
                                                 <span id='shortFormUrl'>
-                                                    {'https://urlsh.yn.lt/' + url_short_form}
+                                                    {domainUrl + url_short_form}
                                                 </span>
-                                                <CopyToClipboard text={'https://urlsh.yn.lt/' + url_short_form} onCopy={() => setState({ copied: true })}>
+                                                <CopyToClipboard text={domainUrl + url_short_form} onCopy={() => setState({ copied: true })}>
                                                     <button className='btn-xs btn-secondary rounded-md'>
                                                         <img src={copy} alt="" />
                                                     </button>
@@ -112,6 +152,26 @@ const Customize = () => {
 
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td colSpan='3'>
+                                            <div className='flex items-center justify-center'>
+                                                {/* <img src="https://www.w3schools.com/graphics/pic_the_scream.jpg" alt="" /> */}
+                                                <QRCode
+                                                    id='svg'
+                                                    size='200'
+                                                    value={domainUrl + url_short_form}
+                                                    viewBox={`0 0 256 256`}
+                                                />
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan='3'>
+                                            <button onClick={downloadQr} className='btn btn-secondary btn-xs text-white'>Download QR Code</button>
+                                        </td>
+                                    </tr>
+
 
                                     <tr className=' input '>
                                         <td colSpan='3'>
@@ -137,6 +197,11 @@ const Customize = () => {
                             <iframe className='h-full' src={url} frameborder="0" title='view'>
 
                             </iframe>
+
+                            <canvas id="myCanvas" width="240" height="297"
+                                style={{ display: 'none', padding: '10px', border: '1px solid #d3d3d3' }}>
+                                Your browser does not support the HTML5 canvas tag.
+                            </canvas>
                         </div>
                     </div>
                 </div>
