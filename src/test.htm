@@ -8,10 +8,35 @@
     <title>Document</title>
 </head>
 
+
 <body>
+    <button id="myBtn">Change Iframe</button>
+    <h1 id="h1Title">Iframe Title</h1>
+    <div id="myIframe">
+        <iframe src="http://xtgem.com"></iframe>
+    </div>
+
+
     <script>
+        const myBtn = document.getElementById('myBtn');
+        const myIframe = document.getElementById('myIframe');
+        const h1Title = document.getElementById('h1Title');
+        myBtn.addEventListener('click', changeIframe);
+
+        async function changeIframe() {
+            // fetch('http://xtgem.com')
+            // .then(res=>res.text())
+            // .then(data=>{
+            //     const aa = data.find('title')
+            //     console.log(aa)
+            // })
+            console.log(await myIframe.title)
+        }
+        changeIframe()
+        // const getTitle = get.querySelector('title');
+        // console.log(getTitle)
         const shortUrl = window.location.href.split('/')[3];
-        window.location.href = 'http://rakib17.com'
+        // window.location.href = 'http://rakib17.com'
     </script>
 </body>
 

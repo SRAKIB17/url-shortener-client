@@ -54,7 +54,7 @@ const Add = () => {
                     {err}
                 </div>
                 <div className=" w-full max-w-xs">
-                    <p className="ml-0 text-secondary m-2 flex"> Secret code  <p className="text-green-500 align-top">  (optional)</p></p>
+                    <p className="ml-0 text-secondary m-2 flex"> Secret code  <p className="text-green-500 align-top">  (optional, minimum length 6)</p></p>
                     <input
                         placeholder="Enter Secret Code"
                         className="input input-bordered input-secondary  w-full max-w-xs"

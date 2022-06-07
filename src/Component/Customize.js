@@ -53,12 +53,12 @@ const Customize = () => {
 
         await ctx.drawImage(img, 1, 1);
 
-        const file = canvas.toDataURL('image/jpeg', 1.0);
+        const file = canvas.toDataURL('image/png', 1.0);
 
         const a = e.target.ownerDocument.createElement('a');
 
         a.className = "display-none";
-        a.download = `${shortener}.jpeg`;
+        a.download = `${shortener}.png`;
         a.href = file;
         e.target.appendChild(a);
 
@@ -67,7 +67,7 @@ const Customize = () => {
             setDownload(false)
         }
     }
-    const domainUrl = 'http://urlsh.wap.sh/'
+    const domainUrl = 'urlsh.hexat.com/'
     return (
         <div>
             <Header />
@@ -159,6 +159,7 @@ const Customize = () => {
                                                 <QRCode
                                                     id='svg'
                                                     size='200'
+                                                    
                                                     value={domainUrl + url_short_form}
                                                     viewBox={`0 0 256 256`}
                                                 />
